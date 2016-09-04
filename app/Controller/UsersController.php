@@ -9,7 +9,8 @@ class UsersController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow("add");
+        // ユーザー自身による登録とログアウトを許可する
+        $this->Auth->allow("add", "logout");
     }
 
     public function index()
@@ -77,5 +78,21 @@ class UsersController extends AppController
 
         $this->Flash->error(__('User was not deleted'));
         return $this->redirect(array('action' => 'index'));
+    }
+
+    public function login()
+    {
+        if ($this->request->is("post")) {
+            if ($this->Auth->login()) {
+                $this->redirect($this->Auth->redirect());
+            }
+        } else {
+            $this->Flash->error(__("// ユーザー自身による登録とログアウトを許可する"));
+        }
+    }
+
+    public function logout()
+    {
+        $this->redirect($this->Auth->logout());
     }
 }
